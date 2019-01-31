@@ -45,7 +45,9 @@ func WhatIsMyIp(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		userIp := getUserIp(ctx, *r)
+		_, span := trace.StartSpan(ctx, "write response")
 		_, err := fmt.Fprintf(w, "%s\n", userIp)
+		span.End()
 		if err != nil {
 			log.Fatalf("can't writer response to %+v\n", w)
 		}
